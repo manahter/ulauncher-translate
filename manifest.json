@@ -1,0 +1,40 @@
+{
+  "required_api_version": "^2.0.0",
+  "name": "Google Çeviri",
+  "description": "Google'dan anlık çeviri",
+  "developer_name": "Nesivmi - nesidizayn.com",
+  "icon": "images/icon.png",
+  "options": {
+    "query_debounce": 0.5
+  },
+  "preferences": [
+    {
+      "id": "ceviri",
+      "type": "keyword",
+      "name": "Ceviri",
+      "description": "Google Ceviri",
+      "default_value": "ç"
+    },
+    {
+      "id": "wrap",
+      "type": "keyword",
+      "name": "Text Wrapping",
+      "description": "Count of letters in line",
+      "default_value": "80"
+    },
+    {
+      "id": "mainlang",
+      "type": "keyword",
+      "name": "Native Language",
+      "description": "Your Language. 2 letters or 'auto'",
+      "default_value": "tr"
+    },
+    {
+      "id": "otherlang",
+      "type": "keyword",
+      "name": "Native Language",
+      "description": "Translation language. 2 letters or 'auto'",
+      "default_value": "auto"
+    }
+  ]
+}
