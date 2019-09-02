@@ -32,7 +32,7 @@
     {
       "id": "otherlang",
       "type": "keyword",
-      "name": "Native Language",
+      "name": "Other Language",
       "description": "Translation language. 2 letters or 'auto'",
       "default_value": "auto"
     }
