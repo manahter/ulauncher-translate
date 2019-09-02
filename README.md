@@ -22,17 +22,16 @@ https://github.com/nesivmi/ulauncher-translate-v1
 
 ## Usage
 
-ç : Translate (Turkish: Çeviri :)
+ç : Translate Keyword
 * > ç  from_lang:to_lang  some_text
 * > ç Hello
 * > ç :tr Hello
-* > ç en:tr Hello
+* > ç en:ru Hello
 ```
 ```
-
 ## Prefrences
 
-* **Ceviri** - Main extension keyword
+* **Ceviri** - Main extension keyword. You can change.
 * **Text Wrapping** - Count of letters in line. ( for multi-line translations )
 * **Native Language** - Your language.
 * **Other Language** - Translation language. ( Auto is preferred )
