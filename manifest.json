@@ -17,21 +17,21 @@
     },
     {
       "id": "wrap",
-      "type": "keyword",
+      "type": "text",
       "name": "Text Wrapping",
       "description": "Count of letters in line",
       "default_value": "80"
     },
     {
       "id": "mainlang",
-      "type": "keyword",
+      "type": "text",
       "name": "Native Language",
       "description": "Your Language. 2 letters or 'auto'",
       "default_value": "tr"
     },
     {
       "id": "otherlang",
-      "type": "keyword",
+      "type": "text",
       "name": "Other Language",
       "description": "Translation language. 2 letters or 'auto'",
       "default_value": "auto"
