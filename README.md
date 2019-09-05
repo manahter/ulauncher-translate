@@ -1,8 +1,8 @@
 # Ulauncher Translate v1.0
 
-[![Ulauncher Extension](https://img.shields.io/badge/Ulauncher-Extension-green.svg)](https://github.com/nesivmi/ulauncher-translate-v1)
+[![Ulauncher Extension](https://img.shields.io/badge/Ulauncher-Extension-green.svg)](https://github.com/nesivmi/ulauncher-translate)
 
-> [Translate v1.0](https://github.com/nesivmi/ulauncher-translate-v1)
+> [Translate v1.0](https://github.com/nesivmi/ulauncher-translate)
 
 ## Preview
 
@@ -17,7 +17,7 @@
 Open ulauncher preferences window -> extensions -> add extension and paste the following url:
 
 ```
-https://github.com/nesivmi/ulauncher-translate-v1
+https://github.com/nesivmi/ulauncher-translate
 ```
 
 ## Usage
