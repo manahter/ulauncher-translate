@@ -88,7 +88,7 @@ class KeywordQueryEventListener(EventListener):
         
         items = [
             ExtensionResultItem(icon='images/icon.png',
-                                name=query,
+                                name=query.replace("\n",""),
                                 description=translate(query, to_language, from_language, extension.preferences["wrap"]),
                                 on_enter=HideWindowAction())
         ]
