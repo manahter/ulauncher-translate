@@ -56,7 +56,6 @@ def translate(to_translate, to_language="auto", from_language="auto", wrap_len="
 
 
 
-
 class TranslateExtension(Extension):
     def __init__(self):
         super(TranslateExtension, self).__init__()
