@@ -7,7 +7,7 @@ from ulauncher.api.shared.event import KeywordQueryEvent, ItemEnterEvent
 from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
 from ulauncher.api.shared.action.RenderResultListAction import RenderResultListAction
 from ulauncher.api.shared.action.HideWindowAction import HideWindowAction
-from ulauncher.api.shared.action.OpenUrlAction import OpenUrlAction
+from ulauncher.api.shared.action.CopyToClipboardAction import CopyToClipboardAction
 import textwrap
 import sys
 import re
@@ -84,12 +84,12 @@ class KeywordQueryEventListener(EventListener):
         else:
             from_language = extension.preferences["otherlang"]
             to_language = extension.preferences["mainlang"]
-        
+        ceviri = translate(query, to_language, from_language, extension.preferences["wrap"])
         items = [
             ExtensionResultItem(icon='images/icon.png',
                                 name=query.replace("\n",""),
                                 description=translate(query, to_language, from_language, extension.preferences["wrap"]),
-                                on_enter=HideWindowAction())
+                                on_enter=CopyToClipboardAction(ceviri))
         ]
 
         return RenderResultListAction(items)
