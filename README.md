@@ -1,8 +1,8 @@
-# Ulauncher Translate v1.0
+# Ulauncher - Translate
 
 [![Ulauncher Extension](https://img.shields.io/badge/Ulauncher-Extension-green.svg)](https://github.com/nesivmi/ulauncher-translate)
 
-> [Translate v1.0](https://github.com/nesivmi/ulauncher-translate)
+> [Translate](https://github.com/nesivmi/ulauncher-translate)
 
 ## Preview
 
