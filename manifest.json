@@ -1,8 +1,8 @@
 {
   "required_api_version": "^2.0.0",
   "name": "Google Çeviri",
-  "description": "Google'dan anlık çeviri",
-  "developer_name": "Nesivmi - nesidizayn.com",
+  "description": "Google Instant Translation",
+  "developer_name": "manahter",
   "icon": "images/icon.png",
   "options": {
     "query_debounce": 0.5
