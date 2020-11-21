@@ -1,4 +1,4 @@
-# Ulauncher - Translate
+# Ulauncher - Translate  (Updated)
 
 [![Ulauncher Extension](https://img.shields.io/badge/Ulauncher-Extension-green.svg)](https://github.com/manahter/ulauncher-translate)
 
