@@ -3,59 +3,61 @@
 # https://github.com/mouuff/mtranslate
 from ulauncher.api.client.Extension import Extension
 from ulauncher.api.client.EventListener import EventListener
-from ulauncher.api.shared.event import KeywordQueryEvent, ItemEnterEvent
+from ulauncher.api.shared.event import KeywordQueryEvent
 from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
 from ulauncher.api.shared.action.RenderResultListAction import RenderResultListAction
 from ulauncher.api.shared.action.HideWindowAction import HideWindowAction
 from ulauncher.api.shared.action.CopyToClipboardAction import CopyToClipboardAction
+import json
+import socket
 import textwrap
-import sys
-import re
+import urllib.error
+import urllib.parse
+import urllib.request
 
-if (sys.version_info[0] < 3):
-    import urllib2
-    import urllib
-    import HTMLParser
-else:
-    import html
-    import urllib.request
-    import urllib.parse
-
-agent = {'User-Agent': "Mozilla/5.0 (Android 9; Mobile; rv:67.0.3) Gecko/67.0.3 Firefox/67.0.3"}
+# The old endpoint (translate.google.com/m, HTML scraping) now answers
+# 429 Too Many Requests / redirects to google.com/sorry for many IPs, which
+# left the extension stuck on "loading". This endpoint returns JSON.
+BASE_URL = "https://clients5.google.com/translate_a/t"
+AGENT = {'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                       "(KHTML, like Gecko) Chrome/120.0 Safari/537.36"}
+TIMEOUT = 10
 
 
-def unescape(text):
-    if (sys.version_info[0] < 3):
-        parser = HTMLParser.HTMLParser()
-    else:
-        parser = html
-    return (parser.unescape(text))
+class TranslateError(Exception):
+    pass
 
 
 def translate(to_translate, to_language="auto", from_language="auto", wrap_len="80"):
-    base_link = "http://translate.google.com/m?tl=%s&sl=%s&q=%s"
-    if (sys.version_info[0] < 3):
-        to_translate = urllib.quote_plus(to_translate)
-        link = base_link % (to_language, from_language, to_translate)
-        request = urllib2.Request(link, headers=agent)
-        raw_data = urllib2.urlopen(request).read()
-    else:
-        to_translate = urllib.parse.quote(to_translate)
-        link = base_link % (to_language, from_language, to_translate)
-        request = urllib.request.Request(link, headers=agent)
-        raw_data = urllib.request.urlopen(request).read()
-       
-    data = raw_data.decode("utf-8")
-    
-    expr = r'class="result-container">(.*?)<'
-    re_result = re.findall(expr, data)
-    if (len(re_result) == 0):
-        result = ""
-    else:
-        result = unescape(re_result[0])
-    
-    return ("\n".join(textwrap.wrap(result, int(wrap_len) if wrap_len.isdigit() else 80 )))
+    params = urllib.parse.urlencode({
+        "client": "dict-chrome-ex",
+        "sl": from_language,
+        "tl": to_language,
+        "q": to_translate,
+    })
+    request = urllib.request.Request("%s?%s" % (BASE_URL, params), headers=AGENT)
+    try:
+        raw_data = urllib.request.urlopen(request, timeout=TIMEOUT).read()
+    except urllib.error.HTTPError as e:
+        if e.code == 429:
+            raise TranslateError("Google is rate limiting this IP (HTTP 429). Try again later.")
+        raise TranslateError("Google returned HTTP %s" % e.code)
+    except (urllib.error.URLError, socket.timeout) as e:
+        raise TranslateError("Network error: %s" % getattr(e, "reason", e))
 
+    try:
+        data = json.loads(raw_data.decode("utf-8"))
+        # sl=auto -> [["translation", "detected-lang"]]
+        # sl=xx   -> ["translation"]
+        first = data[0]
+        result = first[0] if isinstance(first, list) else first
+    except (ValueError, IndexError, TypeError):
+        raise TranslateError("Unexpected response from Google")
+
+    width = int(wrap_len) if str(wrap_len).isdigit() else 80
+    return "\n".join(
+        "\n".join(textwrap.wrap(line, width)) for line in result.splitlines()
+    )
 
 
 class TranslateExtension(Extension):
@@ -86,12 +88,21 @@ class KeywordQueryEventListener(EventListener):
         else:
             from_language = extension.preferences["otherlang"]
             to_language = extension.preferences["mainlang"]
-        ceviri = translate(query, to_language, from_language, extension.preferences["wrap"])
-        
+
+        try:
+            ceviri = translate(query, to_language, from_language, extension.preferences["wrap"])
+        except TranslateError as e:
+            return RenderResultListAction([
+                ExtensionResultItem(icon='images/icon.png',
+                                    name="Translation failed",
+                                    description=str(e),
+                                    on_enter=HideWindowAction())
+            ])
+
         items = [
             ExtensionResultItem(icon='images/icon.png',
                                 name=query.replace("\n",""),
-                                description=translate(query, to_language, from_language, extension.preferences["wrap"]),
+                                description=ceviri,
                                 on_enter=CopyToClipboardAction(ceviri))
         ]
 
